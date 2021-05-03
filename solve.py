@@ -13,6 +13,11 @@ def print_matrix(matrix):
         print(row)
     print("")
 
+# Takes a square matrix, and an empty list, copies the matrix into the list
+def copy_matrix(m1, m2):
+    for i in range(len(m1)):
+        m2.append(m1[i].copy())
+
 # Swaps matrix entries at the two indices
 # Each index should be a pair, to properly index
 def swap_entries(matrix, index1, index2):
@@ -35,21 +40,60 @@ def can_move_right(state, index):
 
 # The operators each return a tuple, this is the new blank index
 def move_up(state, index):
-    new_index = index[0]-1, index[1]
-    swap_entries(state, index, new_index)
-    index = new_index
-    return index
+    new_state = []
+    copy_matrix(state, new_state)
+    new_index = (index[0]-1, index[1])
+    swap_entries(new_state, index, new_index)
+    return new_state, new_index
 
 def move_down(state, index):
-    new_index = index[0]+1,index[1]
-    swap_entries(state, index, new_index)
-    index = new_index
-    return index
+    new_state = []
+    copy_matrix(state, new_state)
+    new_index = (index[0]+1,index[1])
+    swap_entries(new_state, index, new_index)
+    return new_state, new_index
 
+def move_left(state, index):
+    new_state = []
+    copy_matrix(state, new_state)
+    new_index = (index[0],index[1]-1)
+    swap_entries(new_state, index, new_index)
+    return new_state, new_index
+
+def move_right(state, index):
+    new_state = []
+    copy_matrix(state, new_state)
+    new_index = (index[0],index[1]+1)
+    swap_entries(new_state, index, new_index)
+    return new_state, new_index
+
+def expand_node(state, index):
+    new_nodes = []
+    if(can_move_up(state, index)):
+        new_state, new_index = move_up(state, index)
+        new_nodes.append((new_state, new_index))
+
+    if(can_move_down(state, index)):
+        new_state, new_index = move_down(state, index)
+        new_nodes.append((new_state, new_index))
+
+    if(can_move_left(state, index)):
+        new_state, new_index = move_left(state, index)
+        new_nodes.append((new_state, new_index))
+
+    if(can_move_right(state, index)):
+        new_state, new_index = move_right(state, index)
+        new_nodes.append((new_state, new_index))
+
+    return new_nodes
+    
+
+
+    
 print_matrix(test_puzzle)
-index_blank = move_up(test_puzzle, index_blank)
-print_matrix(test_puzzle)
-index_blank = move_down(test_puzzle, index_blank)
-print_matrix(test_puzzle)
-index_blank = move_down(test_puzzle, index_blank)
-print_matrix(test_puzzle)
+new_nodes = expand_node(test_puzzle, index_blank)
+for i in range(len(new_nodes)):
+    new_puzzle, index_blank = new_nodes[i]
+    print_matrix(new_puzzle)
+
+
