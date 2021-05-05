@@ -1,7 +1,12 @@
+import heapq 
+
+
 # We will represent the blank tile using a 0, and keep track of its index
 test_puzzle = [[2,3,6],[1,5,0],[4,7,8]]
 index_blank = (1,2) 
 puzzle_size = 3
+
+min_heap = []
 
 # Prints a matrix in the square puzzle format
 def print_matrix(matrix):
@@ -67,33 +72,33 @@ def move_right(state, index):
     swap_entries(new_state, index, new_index)
     return new_state, new_index
 
-def expand_node(state, index):
-    new_nodes = []
+def get_adjacent_states(state, index):
+    new_states = []
     if(can_move_up(state, index)):
         new_state, new_index = move_up(state, index)
-        new_nodes.append((new_state, new_index))
+        new_states.append((new_state, new_index))
 
     if(can_move_down(state, index)):
         new_state, new_index = move_down(state, index)
-        new_nodes.append((new_state, new_index))
+        new_states.append((new_state, new_index))
 
     if(can_move_left(state, index)):
         new_state, new_index = move_left(state, index)
-        new_nodes.append((new_state, new_index))
+        new_states.append((new_state, new_index))
 
     if(can_move_right(state, index)):
         new_state, new_index = move_right(state, index)
-        new_nodes.append((new_state, new_index))
+        new_states.append((new_state, new_index))
 
-    return new_nodes
+    return new_states
     
+# Nodes in the Heap will consist of tuples (priority, depth, state, index)
+def initialize_start_node(state, index, heuristic_func ):
+    heuristic_val = heuristic_func(state)
+    depth = 0
+    priority = heuristic_val + depth
 
-
-    
-print_matrix(test_puzzle)
-new_nodes = expand_node(test_puzzle, index_blank)
-for i in range(len(new_nodes)):
-    new_puzzle, index_blank = new_nodes[i]
-    print_matrix(new_puzzle)
-
+    new_node = (priority, depth, state, index)
+    heapq.heappush(min_heap, new_node)
+ 
 
