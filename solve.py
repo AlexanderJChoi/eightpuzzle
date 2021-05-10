@@ -131,12 +131,17 @@ def solve_puzzle(state, index, heuristic_func ):
         if states_are_equal(cn_state, cn_index, solution_state, solution_index):
             print("SOLUTION FOUND ^_^")
             print_matrix(cn_state)
+            print("SOLUTION DEPTH: " + str(cn_depth))
             print(str(nodes_expanded) + " NODES EXPANDED")
             print("MAX NODES IN MEMORY: " + str(max_nodes))
             return
 
+        print("------------------------")
         print("EXPANDING NODE: ")
+        print("NODE DEPTH: " + str(cn_depth))
+        print("NODE HEURISTIC VALUE: " + str(heuristic_func(cn_state)))
         print_matrix(cn_state)
+        print("------------------------")
 
         nn_depth = cn_depth + 1
         new_states = get_adjacent_states(cn_state, cn_index)
@@ -174,5 +179,5 @@ def manhattan_distance_heuristic(state):
 
     return count
 
-solve_puzzle(test_puzzle, index_blank, misplaced_tile_heuristic)
+solve_puzzle(test_puzzle, index_blank, uniform_cost_heuristic)
 
