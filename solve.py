@@ -121,6 +121,7 @@ def initialize_start_node(state, index, heuristic_func ):
 def solve_puzzle(state, index, heuristic_func ):
     initialize_start_node(state, index, heuristic_func)
     nodes_expanded = 0
+    max_nodes = 1
     while(1):
         if len(min_heap) == 0:
             print("NO SOLUTION FOUND :'(")
@@ -131,6 +132,7 @@ def solve_puzzle(state, index, heuristic_func ):
             print("SOLUTION FOUND ^_^")
             print_matrix(cn_state)
             print(str(nodes_expanded) + " NODES EXPANDED")
+            print("MAX NODES IN MEMORY: " + str(max_nodes))
             return
 
         print("EXPANDING NODE: ")
@@ -144,6 +146,8 @@ def solve_puzzle(state, index, heuristic_func ):
             heapq.heappush(min_heap, new_node)
 
         nodes_expanded+=1
+        if len(min_heap) > max_nodes:
+            max_nodes = len(min_heap)
 
 
 def uniform_cost_heuristic(state):
@@ -170,5 +174,5 @@ def manhattan_distance_heuristic(state):
 
     return count
 
-solve_puzzle(test_puzzle, index_blank, manhattan_distance_heuristic)
+solve_puzzle(test_puzzle, index_blank, misplaced_tile_heuristic)
 
