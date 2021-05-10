@@ -3,6 +3,8 @@ import heapq
 
 # We will represent the blank tile using a 0, and keep track of its index
 test_puzzle = [[2,3,6],[1,5,0],[4,7,8]]
+solution_state = [[1, 2, 3] ,[4, 5, 6] ,[7, 8, 0]]  
+solution_index = (2,2)
 index_blank = (1,2) 
 puzzle_size = 3
 
@@ -92,6 +94,20 @@ def get_adjacent_states(state, index):
 
     return new_states
     
+def states_are_equal(state1, index1, state2, index2):
+    for i in range(len(state1)):
+        for j in range(len(state1[0])):
+            if state1[i][j] != state2[i][j]:
+                return 0
+
+    if index1[0] != index2[0]:
+        return 0
+
+    if index1[1] != index2[1]:
+        return 0
+
+    return 1
+
 # Nodes in the Heap will consist of tuples (priority, depth, state, index)
 def initialize_start_node(state, index, heuristic_func ):
     heuristic_val = heuristic_func(state)
@@ -100,5 +116,35 @@ def initialize_start_node(state, index, heuristic_func ):
 
     new_node = (priority, depth, state, index)
     heapq.heappush(min_heap, new_node)
- 
+
+
+def solve_puzzle(state, index, heuristic_func ):
+    initialize_start_node(state, index, heuristic_func)
+    while(1):
+        if len(min_heap) == 0:
+            print("NO SOLUTION FOUND :'(")
+            return
+
+        cn_priority, cn_depth, cn_state, cn_index = heapq.heappop(min_heap)
+        if states_are_equal(cn_state, cn_index, solution_state, solution_index):
+            print("SOLUTION FOUND ^_^")
+            print_matrix(cn_state)
+            return
+
+        print("EXPANDING NODE: ")
+        print_matrix(cn_state)
+
+        nn_depth = cn_depth + 1
+        new_states = get_adjacent_states(cn_state, cn_index)
+        for new_state, new_index in new_states:
+            nn_priority = heuristic_func(new_state) + nn_depth
+            new_node = (nn_priority, nn_depth, new_state, new_index)
+            heapq.heappush(min_heap, new_node)
+
+
+def uniform_cost_heuristic(state):
+    return 0
+
+
+solve_puzzle(test_puzzle, index_blank, uniform_cost_heuristic)
 
