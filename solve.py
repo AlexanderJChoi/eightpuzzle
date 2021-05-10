@@ -3,11 +3,39 @@ import heapq
 
 # We will represent the blank tile using a 0, and keep track of its index
 test_puzzle = [[2,3,6],[1,5,0],[4,7,8]]
-solution_state = [[1, 2, 3] ,[4, 5, 6] ,[7, 8, 0]]  
-solution_index = (2,2)
 index_blank = (1,2) 
 puzzle_size = 3
 
+# the state we are searching for
+solution_state = [[1, 2, 3] ,[4, 5, 6] ,[7, 8, 0]]  
+solution_index = (2,2)
+
+# Here are some sample puzzles
+depth_0_puzzle = [[1, 2, 3],[4, 5, 6],[7, 8, 0]]
+depth_0_index = (2,2)
+
+depth_2_puzzle = [[1, 2, 3],[4, 5, 6],[0, 7, 8]]
+depth_2_index = (2,0)
+
+depth_4_puzzle = [[1, 2, 3],[5, 0, 6],[4, 7, 8]]
+depth_4_index = (1,1)
+
+depth_8_puzzle = [[1, 3, 6],[5, 0, 2],[4, 7, 8]]
+depth_8_index = (1,1)
+
+depth_12_puzzle = [[1, 3, 6],[5, 0, 7],[4, 8, 2]]
+depth_12_index = (1,1)
+
+depth_16_puzzle = [[1, 6, 7],[5, 0, 3],[4, 8, 2]]
+depth_16_index = (1,1)
+
+depth_20_puzzle = [[7, 1, 2],[4, 8, 5],[6, 3, 0]]
+depth_20_index = (2,2)
+
+depth_24_puzzle = [[0, 7, 2],[4, 6, 1],[3, 5, 8]]
+depth_24_index = (0,0)
+
+# this is the min priority queue data structure
 min_heap = []
 
 # Prints a matrix in the square puzzle format
@@ -45,7 +73,8 @@ def can_move_left(state, index):
 def can_move_right(state, index):
     return index[1] < (puzzle_size - 1)
 
-# The operators each return a tuple, this is the new blank index
+# The following are the four operatoes
+# Each returns a tuple, this is the new blank index
 def move_up(state, index):
     new_state = []
     copy_matrix(state, new_state)
@@ -74,6 +103,8 @@ def move_right(state, index):
     swap_entries(new_state, index, new_index)
     return new_state, new_index
 
+# Returns all valid states we can reach from the input state
+# Format of output is a list of (state, index) tuples
 def get_adjacent_states(state, index):
     new_states = []
     if(can_move_up(state, index)):
@@ -94,6 +125,7 @@ def get_adjacent_states(state, index):
 
     return new_states
     
+# Compares two (state, index) tuples, for equality
 def states_are_equal(state1, index1, state2, index2):
     for i in range(len(state1)):
         for j in range(len(state1[0])):
