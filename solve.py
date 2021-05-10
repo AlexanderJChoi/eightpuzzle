@@ -120,6 +120,7 @@ def initialize_start_node(state, index, heuristic_func ):
 
 def solve_puzzle(state, index, heuristic_func ):
     initialize_start_node(state, index, heuristic_func)
+    nodes_expanded = 0
     while(1):
         if len(min_heap) == 0:
             print("NO SOLUTION FOUND :'(")
@@ -129,6 +130,7 @@ def solve_puzzle(state, index, heuristic_func ):
         if states_are_equal(cn_state, cn_index, solution_state, solution_index):
             print("SOLUTION FOUND ^_^")
             print_matrix(cn_state)
+            print(str(nodes_expanded) + " NODES EXPANDED")
             return
 
         print("EXPANDING NODE: ")
@@ -141,10 +143,32 @@ def solve_puzzle(state, index, heuristic_func ):
             new_node = (nn_priority, nn_depth, new_state, new_index)
             heapq.heappush(min_heap, new_node)
 
+        nodes_expanded+=1
+
 
 def uniform_cost_heuristic(state):
     return 0
 
+def misplaced_tile_heuristic(state):
+    count = 0
+    for i in range(len(state)):
+        for j in range(len(state)):
+            if state[i][j] != solution_state[i][j]:
+                count+=1
 
-solve_puzzle(test_puzzle, index_blank, uniform_cost_heuristic)
+    return count
+
+def manhattan_distance_heuristic(state):
+    count = 0
+    for i in range(len(state)):
+        for j in range(len(state)):
+            for k in range(len(solution_state)):
+                for l in range(len(solution_state)):
+                    if state[i][j] == solution_state[k][l]:
+                        distance = abs(i-k) + abs(j-l)
+                        count += distance
+
+    return count
+
+solve_puzzle(test_puzzle, index_blank, manhattan_distance_heuristic)
 
