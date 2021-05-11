@@ -316,6 +316,7 @@ while(1):
         chosen_heuristic = manhattan_distance_heuristic
     else:
         print("OPTION NOT RECOGNIZED. RESTARTING")
+        continue
 
 
     solve_puzzle(chosen_puzzle, chosen_index, chosen_heuristic)
